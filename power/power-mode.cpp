@@ -1,70 +1,52 @@
 /*
  * Copyright (c) 2019-2020 The Linux Foundation. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ *     * Neither the name of The Linux Foundation nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+ * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <aidl/android/hardware/power/BnPower.h>
-#include "power-common.h"
 #include <android-base/file.h>
 #include <android-base/logging.h>
+
+#include <aidl/android/hardware/power/BnPower.h>
+
+#include <android-base/logging.h>
+#include <android/binder_manager.h>
+#include <android/binder_process.h>
+
 #include <linux/input.h>
 
-#define BATTERY_SAVER_NODE "/sys/module/battery_saver/parameters/enabled"
+#define TAP_TO_WAKE_NODE "/sys/touchpanel/double_tap"
 
-namespace {
+using ::aidl::android::hardware::power::BnPower;
+using ::aidl::android::hardware::power::IPower;
+using ::aidl::android::hardware::power::Mode;
+using ::aidl::android::hardware::power::Boost;
 
-int open_ts_input() {
-	int fd = -1;
-	DIR *dir = opendir("/dev/input");
-
-	if (dir != NULL) {
-		struct dirent *ent;
-
-		while ((ent = readdir(dir)) != NULL) {
-			if (ent->d_type == DT_CHR) {
-				char absolute_path[PATH_MAX] = {0};
-				char name[80] = {0};
-
-				strcpy(absolute_path, "/dev/input/");
-				strcat(absolute_path, ent->d_name);
-
-				fd = open(absolute_path, O_RDWR);
-				if (ioctl(fd, EVIOCGNAME(sizeof(name) - 1), &name) > 0) {
-					if (strcmp(name, "atmel_mxt_ts") == 0 ||
-						strcmp(name, "fts") == 0 ||
-						strcmp(name, "fts_521") == 0 ||
-						strcmp(name, "fts_ts") == 0 ||
-						strcmp(name, "ft5x46") == 0 ||
-						strcmp(name, "goodix_ts") == 0 ||
-						strcmp(name, "NVTCapacitiveTouchScreen") == 0 ||
-						strcmp(name, "NVT_ts") == 0 ||
-						strcmp(name, "synaptics_dsx") == 0)
-						break;
-				}
-
-				close(fd);
-				fd = -1;
-			}
-		}
-
-		closedir(dir);
-	}
-
-	return fd;
-}
-
-}  // anonymous namespace
+using ::ndk::ScopedAStatus;
+using ::ndk::SharedRefBase;
 
 namespace aidl {
 namespace android {
@@ -72,44 +54,77 @@ namespace hardware {
 namespace power {
 namespace impl {
 
-static constexpr int kInputEventWakeupModeOff = 4;
-static constexpr int kInputEventWakeupModeOn = 5;
-
-using ::aidl::android::hardware::power::Mode;
-
-bool isDeviceSpecificModeSupported(Mode type, bool* _aidl_return) {
-	switch (type) {
-		case Mode::DOUBLE_TAP_TO_WAKE:
-                case mode::LOW_POWER:
-			*_aidl_return = true;
-			return true;
-		default:
-			return false;
-	}
+void setInteractive(bool interactive) {
+   set_interactive(interactive ? 1:0);
 }
 
-bool setDeviceSpecificMode(Mode type, bool enabled) {
-	switch (type) {
-		case Mode::DOUBLE_TAP_TO_WAKE:
-                case Mode::LOW_POWER:
-                ::android::base::WriteStringToFile(enabled ? "Y" : "N", BATTERY_SAVER_NODE, true);
-			int fd = open_ts_input();
-			if (fd == -1) {
-				LOG(WARNING)
-					<< "DT2W won't work because no supported touchscreen input devices were found";
-				return false;
-			}
-			struct input_event ev;
-			ev.type = EV_SYN;
-			ev.code = SYN_CONFIG;
-			ev.value = enabled ? kInputEventWakeupModeOn : kInputEventWakeupModeOff;
-			write(fd, &ev, sizeof(ev));
-			close(fd);
-			return true;
-		}
-		default:
-			return false;
-	}
+ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
+    LOG(INFO) << "Power setMode: " << static_cast<int32_t>(type) << " to: " << enabled;
+    switch(type){
+#ifdef TAP_TO_WAKE_NODE
+        case Mode::DOUBLE_TAP_TO_WAKE:
+            ::android::base::WriteStringToFile(enabled ? "1" : "0", TAP_TO_WAKE_NODE, true);
+            break;
+#else
+        case Mode::DOUBLE_TAP_TO_WAKE:
+#endif
+        case Mode::LOW_POWER:
+        case Mode::LAUNCH:
+        case Mode::EXPENSIVE_RENDERING:
+        case Mode::DEVICE_IDLE:
+        case Mode::DISPLAY_INACTIVE:
+        case Mode::AUDIO_STREAMING_LOW_LATENCY:
+        case Mode::CAMERA_STREAMING_SECURE:
+        case Mode::CAMERA_STREAMING_LOW:
+        case Mode::CAMERA_STREAMING_MID:
+        case Mode::CAMERA_STREAMING_HIGH:
+        case Mode::VR:
+            LOG(INFO) << "Mode " << static_cast<int32_t>(type) << "Not Supported";
+            break;
+        case Mode::INTERACTIVE:
+            setInteractive(enabled);
+            power_hint(POWER_HINT_INTERACTION, NULL);
+            break;
+        case Mode::SUSTAINED_PERFORMANCE:
+        case Mode::FIXED_PERFORMANCE:
+            power_hint(POWER_HINT_SUSTAINED_PERFORMANCE, NULL);
+            break;
+        default:
+            LOG(INFO) << "Mode " << static_cast<int32_t>(type) << "Not Supported";
+            break;
+    }
+    return ndk::ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Power::isModeSupported(Mode type, bool* _aidl_return) {
+    LOG(INFO) << "Power isModeSupported: " << static_cast<int32_t>(type);
+
+    switch(type){
+#ifdef TAP_TO_WAKE_NODE
+        case Mode::DOUBLE_TAP_TO_WAKE:
+#endif
+        case Mode::INTERACTIVE:
+        case Mode::SUSTAINED_PERFORMANCE:
+        case Mode::FIXED_PERFORMANCE:
+            *_aidl_return = true;
+            break;
+        default:
+            *_aidl_return = false;
+            break;
+    }
+    return ndk::ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Power::setBoost(Boost type, int32_t durationMs) {
+    LOG(INFO) << "Power setBoost: " << static_cast<int32_t>(type)
+                 << ", duration: " << durationMs;
+    return ndk::ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Power::isBoostSupported(Boost type, bool* _aidl_return) {
+    LOG(INFO) << "Power isBoostSupported: " << static_cast<int32_t>(type);
+    *_aidl_return = false;
+    return ndk::ScopedAStatus::ok();
 }
 
 }  // namespace impl
