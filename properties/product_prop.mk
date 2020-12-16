@@ -54,7 +54,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.use_data_netmgrd=true \
     ro.vold.umsdirtyratio=20
 
-
 # RCS
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.rcs.supported=1
+
+# Transcoding related property.
+PRODUCT_PRODUCT_PROPERTIES += \
+    debug.media.transcoding.codec_max_operating_rate_720P=240 \
+    debug.media.transcoding.codec_max_operating_rate_1080P=120
