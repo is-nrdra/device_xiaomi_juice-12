@@ -59,6 +59,7 @@ TARGET_USES_QTI_CAMERA_DEVICE := true
 # Display
 TARGET_USES_HWC2 := true
 TARGET_USES_ION := true
+TARGET_USES_VULKAN := true
 
 # Enable real time lockscreen charging current values
 BOARD_GLOBAL_CFLAGS += -DBATTERY_REAL_INFO
