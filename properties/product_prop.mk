@@ -54,3 +54,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.disable.power.collapse=0 \
     ro.vendor.use_data_netmgrd=true \
     ro.vold.umsdirtyratio=20
+
+
+# RCS
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.rcs.supported=1
