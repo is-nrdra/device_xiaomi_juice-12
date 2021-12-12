@@ -70,7 +70,7 @@ HWUI_COMPILE_FOR_PERF := true
 TARGET_ENABLE_MEDIADRM_64 := true
 
 # Filesystem
-TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
+TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/configs/config.fs
 
 # HWUI
 HWUI_COMPILE_FOR_PERF := true
