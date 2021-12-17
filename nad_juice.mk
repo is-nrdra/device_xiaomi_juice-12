@@ -11,6 +11,9 @@ $(call inherit-product, vendor/nusantara/config/common_full_phone.mk)
 USE_GAPPS := true
 USE_PIXEL_CHARGING := true
 
+# Google Recorder
+TARGET_SUPPORTS_GOOGLE_RECORDER := true
+
 # Device identifier. This must come after all inclusions.
 PRODUCT_NAME := nad_juice
 PRODUCT_DEVICE := juice
