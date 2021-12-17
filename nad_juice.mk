@@ -14,6 +14,9 @@ USE_PIXEL_CHARGING := true
 # Google Recorder
 TARGET_SUPPORTS_GOOGLE_RECORDER := true
 
+# Google Assistant
+TARGET_SUPPORTS_NEXT_GEN_ASSISTANT := true
+
 # Device identifier. This must come after all inclusions.
 PRODUCT_NAME := nad_juice
 PRODUCT_DEVICE := juice
