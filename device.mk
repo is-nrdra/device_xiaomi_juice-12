@@ -21,6 +21,10 @@ $(call inherit-product-if-exists, vendor/xiaomi/juice/juice-vendor.mk)
 # Inherit QTI Bluetooth
 $(call inherit-product, vendor/qcom/opensource/commonsys-intf/bluetooth/bt-system-opensource-product.mk)
 
+# APN
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/etc/apns-conf.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/apns-conf.xml
+
 # ANT+
 PRODUCT_PACKAGES += \
     AntHalService-Soong \
