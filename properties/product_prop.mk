@@ -44,7 +44,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Media
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.media_vol_steps=10 \
-    vendor.audio.offload.buffer.size.kb=256
+    vendor.audio.offload.buffer.size.kb=256 \
+    vendor.audio_hal.period_size=240
 
 # Power-saving props
 PRODUCT_PROPERTY_OVERRIDES += \
