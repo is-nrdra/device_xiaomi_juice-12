@@ -212,6 +212,7 @@ Only the three quirks included above are recognized at this point:
     </Encoders>
     <Decoders>
        <!-- Video Hardware  -->
+<!--
         <MediaCodec name="OMX.qcom.video.decoder.avc" type="video/avc" >
             <Quirk name="requires-allocate-on-input-ports" />
             <Quirk name="requires-allocate-on-output-ports" />
@@ -226,6 +227,7 @@ Only the three quirks included above are recognized at this point:
             <Limit name="performance-point-1920x1080" value="60" />
             <Limit name="performance-point-1280x720" value="120" />
         </MediaCodec>
+-->
         <MediaCodec name="OMX.qcom.video.decoder.vp9" type="video/x-vnd.on2.vp9" >
             <Quirk name="requires-allocate-on-input-ports" />
             <Quirk name="requires-allocate-on-output-ports" />
