@@ -71,10 +71,7 @@ void vendor_load_properties() {
         auto prop_name = "ro.product." + source + prop;
         property_override(prop_name.c_str(), value.c_str(), false);
     };
-    
-    property_override("ro.build.fingerprint", "xiaomi/lime_global/lime:10/QKQ1.200830.002/V12.0.3.0.QJFMIXM:user/release-keys");
-    property_override("ro.build.description", "lime-user 10 QKQ1.200830.002 V12.0.3.0.QJFMIXM release-keys");
-   
+
     std::string region = GetProperty("ro.boot.hwc", "");
     std::string hwname = GetProperty("ro.boot.product.hardware.sku", "");
 
@@ -91,7 +88,7 @@ void vendor_load_properties() {
                 property_override("ro.product.brand", "Redmi");
                 property_override("ro.product.model", "Redmi 9T");
                 property_override("ro.product.device", "lime");
-          }     
+          }
     } else if (hwname == "lemon") {
         property_override("ro.product.brand", "Redmi");
         property_override("ro.product.model", "Redmi 9T");
