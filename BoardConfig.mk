@@ -113,10 +113,15 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
 
-# Kernel Toolchain
+# AOSP Clang
+KERNEL_TOOLCHAIN := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-r437112b/bin
+TARGET_KERNEL_CLANG_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-r437112b
+TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-gnu-
+TARGET_KERNEL_ADDITIONAL_FLAGS := LLVM_IAS=1 LLVM=1 LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip
+TARGET_KERNEL_ADDITIONAL_FLAGS += OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf HOSTAR=llvm-ar HOSTLD=ld.lld
+TARGET_KERNEL_ADDITIONAL_FLAGS += HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
 TARGET_KERNEL_CLANG_COMPILE := true
-TARGET_KERNEL_CLANG_VERSION := proton
-KERNEL_TOOLCHAIN_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-proton/bin/aarch64-linux-gnu-
+TARGET_KERNEL_CLANG_VERSION := r437112b
 
 # Metadata
 BOARD_USES_METADATA_PARTITION := true
