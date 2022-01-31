@@ -11,9 +11,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
 # Enable updating of APEXes
 $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
-# Disable APEX compression
-# Keep this after including updatable_apex.mk
-PRODUCT_COMPRESSED_APEX := false
 
 # Setup dalvik vm configs
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
@@ -24,24 +21,16 @@ $(call inherit-product-if-exists, vendor/xiaomi/juice/juice-vendor.mk)
 # Inherit QTI Bluetooth
 $(call inherit-product, vendor/qcom/opensource/commonsys-intf/bluetooth/bt-system-opensource-product.mk)
 
-# Soong Namespace
-PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH) \
-    vendor/qcom/opensource/commonsys/packages/apps/Bluetooth \
-    vendor/qcom/opensource/commonsys/system/bt
-
-PRODUCT_BUILD_SUPER_PARTITION := false
-BOARD_BUILD_PRODUCT_IMAGE := true
-PRODUCT_USE_DYNAMIC_PARTITIONS := true
-
-# Add default implementation of fastboot HAL.
-PRODUCT_PACKAGES += android.hardware.fastboot@1.0-impl-mock
-
 # ANT+
 PRODUCT_PACKAGES += \
     AntHalService-Soong \
     com.dsi.ant.antradio_library \
     com.dsi.ant@1.0
+
+# APEX
+# Disable APEX compression
+# Keep this after including updatable_apex.mk
+PRODUCT_COMPRESSED_APEX := false
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -67,7 +56,7 @@ PRODUCT_PACKAGES += \
    vendor.qti.hardware.bluetooth_audio@2.0.vendor \
    vendor.qti.hardware.btconfigstore@1.0.vendor
 
-# Google Camera
+# Camera
 PRODUCT_PACKAGES += \
     GoogleCameraGo
 
@@ -75,25 +64,18 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libdisplayconfig \
     libqdMetaData \
-    libqdMetaData.system \
-    libvulkan
-
-# Vulkan
-PRODUCT_PACKAGES += \
-    libvulkan
+    libqdMetaData.system
 
 # Fastbootd
 PRODUCT_PACKAGES += \
+    android.hardware.fastboot@1.0-impl-mock \
     fastbootd
 
 # Fstab
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/etc/fstab.default:$(TARGET_COPY_OUT_RAMDISK)/fstab.default
 
-# Google Photos
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/pixel_2016_exclusive.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/pixel_2016_exclusive.xml
-
+# GNSS
 PRODUCT_PACKAGES += \
     android.hardware.gnss@2.1 \
     android.hardware.gnss@2.1.vendor \
@@ -109,8 +91,8 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    init.mi_thermald.rc \
-    init.juice.rc
+    init.juice.rc \
+    init.mi_thermald.rc
 
 # Input
 PRODUCT_COPY_FILES += \
@@ -144,6 +126,11 @@ PRODUCT_PACKAGES += \
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay
 
+# Partitions
+PRODUCT_BUILD_SUPER_PARTITION := false
+BOARD_BUILD_PRODUCT_IMAGE := true
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power-service.qti \
@@ -166,7 +153,7 @@ PRODUCT_PACKAGES += \
     android.hardware.radio.config@1.2 \
     android.hardware.radio.config@1.2.vendor
 
-# Remove unwanted packages
+# RemovePackages
 PRODUCT_PACKAGES += \
     RemovePackages
 
@@ -183,6 +170,16 @@ PRODUCT_PACKAGES += \
 # Shipping API
 PRODUCT_SHIPPING_API_LEVEL := 29
 BOARD_SHIPPING_API_LEVEL := 29
+
+# Soong Namespace
+PRODUCT_SOONG_NAMESPACES += \
+    $(LOCAL_PATH) \
+    vendor/qcom/opensource/commonsys/packages/apps/Bluetooth \
+    vendor/qcom/opensource/commonsys/system/bt
+
+# Sysconfig
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/pixel_2016_exclusive.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/pixel_2016_exclusive.xml
 
 # Target VNDK
 PRODUCT_TARGET_VNDK_VERSION := 30
@@ -222,6 +219,10 @@ PRODUCT_PACKAGES += \
     TelecommResCommon \
     TelephonyResCommon \
     WifiResCommon
+
+# Vulkan
+PRODUCT_PACKAGES += \
+    libvulkan
 
 -include $(LOCAL_PATH)/properties/product_prop.mk
 -include $(LOCAL_PATH)/properties/system_prop.mk
