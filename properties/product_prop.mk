@@ -19,26 +19,24 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Graphics
 PRODUCT_PRODUCT_PROPERTIES += \
-    debug.egl.force_msaa=1 \
-    debug.egl.hw=1 \
-    debug.enable.sglscale=1 \
     debug.hwui.renderer=skiagl \
-    debug.mdpcomp.logs=0 \
-    debug.renderengine.backend=skiaglthreaded \
-    debug.sdm.support_writeback=0 \
     debug.sf.hw=1 \
+    debug.sf.latch_unsignaled=1 \
     debug.sf.disable_backpressure=1 \
     debug.sf.disable_hwc_overlays=1 \
-    debug.sf.latch_unsignaled=1 \
+    debug.sdm.support_writeback=0 \
+    debug.enable.sglscale=1 \
+    debug.egl.hw=1 \
+    debug.egl.force_msaa=1 \
+    debug.mdpcomp.logs=0 \
+    persist.sys.scrollingcache=1 \
     debug.sf.recomputecrop=0 \
-    graphics.gpu.profiler.support=true \
-    renderthread.skia.reduceopstasksplitting=true \
-    ro.hardware.egl=adreno \
-    ro.hardware.vulkan=adreno \
-    ro.surface_flinger.has_wide_color_display=false \
+    vendor.display.disable_rotator_downscale=1 \
     ro.surface_flinger.use_color_management=true \
     ro.surface_flinger.use_context_priority=true \
-    vendor.display.disable_rotator_downscale=1
+    ro.surface_flinger.has_wide_color_display=false \
+    ro.hardware.egl=adreno \
+    ro.hardware.vulkan=adreno
 
 # IORap
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -46,7 +44,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Media
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.config.media_vol_steps=15 \
+    ro.config.media_vol_steps=10 \
     vendor.audio.offload.buffer.size.kb=256
 
 # Power-saving props
