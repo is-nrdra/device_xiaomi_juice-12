@@ -9,6 +9,7 @@ $(call inherit-product, device/xiaomi/juice/device.mk)
 # Inherit some common DerpFest stuff.
 $(call inherit-product, vendor/derp/config/common_full_phone.mk)
 USE_PIXEL_CHARGING := true
+DERP_BUILDTYPE := Official
 
 # Google Recorder
 TARGET_SUPPORTS_GOOGLE_RECORDER := true
