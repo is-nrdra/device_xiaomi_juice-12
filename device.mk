@@ -53,12 +53,15 @@ PRODUCT_PACKAGES += \
 
 # Bluetooth
 PRODUCT_PACKAGES += \
-   android.hardware.bluetooth.audio@2.0-impl \
+   liba2dpoffload \
+   libbthost_if \
    audio.bluetooth.default \
    BluetoothQti \
    libbluetooth_qti \
    vendor.qti.hardware.bluetooth_audio@2.0.vendor \
-   vendor.qti.hardware.btconfigstore@1.0.vendor
+   vendor.qti.hardware.btconfigstore@1.0.vendor \
+   vendor.qti.hardware.btconfigstore@2.0.vendor
+
 
 # Camera
 PRODUCT_PACKAGES += \
