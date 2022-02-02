@@ -27,7 +27,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
     debug.sdm.support_writeback=0 \
     debug.enable.sglscale=1 \
     debug.egl.hw=1 \
-    debug.egl.force_msaa=1 \
     debug.mdpcomp.logs=0 \
     persist.sys.scrollingcache=1 \
     debug.sf.recomputecrop=0 \
