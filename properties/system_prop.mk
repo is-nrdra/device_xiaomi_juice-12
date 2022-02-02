@@ -29,7 +29,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.fw.dex2oat_thread_count=8 \
     ro.vendor.qti.am.reschedule_service=true \
     pm.dexopt.ab-ota=extract \
-    pm.dexopt.boot=extract \
     pm.dexopt.first-boot=quicken \
     pm.dexopt.install=speed-profile
 
