@@ -76,19 +76,9 @@ void vendor_load_properties() {
     std::string hwname = GetProperty("ro.boot.product.hardware.sku", "");
 
     if (hwname == "lime") {
-            if (region == "CN" || region =="Japan") {
-                property_override("ro.product.brand", "Redmi");
-                property_override("ro.product.model", "Redmi 9 Power");
-                property_override("ro.product.device", "lime");
-          } if (region == "India") {
-                property_override("ro.product.brand", "Redmi");
-                property_override("ro.product.model", "Redmi Note 9 4G");
-                property_override("ro.product.device", "lime");
-          } if (region == "Global") {
-                property_override("ro.product.brand", "Redmi");
-                property_override("ro.product.model", "Redmi 9T");
-                property_override("ro.product.device", "lime");
-          }
+        property_override("ro.product.brand", "Redmi");
+        property_override("ro.product.model", "Redmi 9T");
+        property_override("ro.product.device", "lime");
     } else if (hwname == "lemon") {
         property_override("ro.product.brand", "Redmi");
         property_override("ro.product.model", "Redmi 9T");
