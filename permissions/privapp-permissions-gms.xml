@@ -18,4 +18,20 @@
     <privapp-permissions package="com.google.android.gms">
         <permission name="android.permission.WRITE_DEVICE_CONFIG" />
     </privapp-permissions>
+
+    <privapp-permissions package="com.google.android.cellbroadcastreceiver">
+        <permission name="android.permission.READ_PHONE_STATE"/>
+    </privapp-permissions>
+
+    <privapp-permissions package="com.android.phone">
+        <permission name="android.permission.READ_PHONE_STATE"/>
+    </privapp-permissions>
+
+    <privapp-permissions package="com.android.settings">
+        <permission name="android.permission.READ_DEVICE_CONFIG"/>
+    </privapp-permissions>
+
+    <privapp-permissions package="com.google.android.settings.intelligence.IntelligenceApplication">
+        <permission name="android.permission.READ_DEVICE_CONFIG"/>
+    </privapp-permissions>
 </permissions>
